@@ -63,3 +63,40 @@ def plot(arr, arr1, line):
     ax.plot(line[0], line[1], 'k-', linewidth=5.0)
     ax.set_title('Using hyphen instead of Unicode minus')
     plt.show()
+
+
+# Task 2
+
+def plot_error(arr):
+    mpl.rcParams['axes.unicode_minus'] = False
+    fig, ax = plt.subplots()
+    ax.plot(arr, 'bo')
+    ax.set_title('Using hyphen instead of Unicode minus')
+    plt.show()
+
+def h_function(weights, inputs):
+    return np.dot(np.transpose(weights), inputs)
+
+
+def sigmoid(h):
+    return 1 / (1 + np.exp(-h))
+
+
+def cross_entropy(weights, inputs, outputs):
+    error = 0
+    for i, set in enumerate(inputs):
+        y = outputs[i]
+        s = sigmoid(h_function(weights, set))
+        error += (y * np.log(s)) + ((1 - y) * np.log(1 - s))
+    return -(error/len(inputs))
+
+
+
+def train_function(weights, inputs, outputs, leaning_rate):
+    experience = [0] * len(inputs[0])
+    for i, set in enumerate(inputs):
+        h = h_function(weights, set)
+        experience = np.add(experience, np.multiply((sigmoid(h) - outputs[i]), set))
+    return np.subtract(weights, np.multiply(leaning_rate, experience))
+
+
