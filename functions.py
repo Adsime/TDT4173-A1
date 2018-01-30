@@ -4,12 +4,16 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import mpl_toolkits.mplot3d as mplt
 
-def calculate_weight(input_vec, output_vec):
-    t = np.transpose(input_vec)
-    return (1/(np.dot(t, input_vec))) * np.dot(t, output_vec)
-
 
 def create_io_arrays(dataset, linear):
+    """
+    Using a matrix where the last number is considered an output; this will split the input and output params into
+    two different arrays. Also, if the tast is not considered solvable linearly, two additional parameters
+    are added to the input sets. These are just the squares of each input already present.
+    :param dataset: matrix
+    :param linear: boolean
+    :return: array
+    """
     inputs = []
     set_size = len(dataset[0])
     for data in dataset:
@@ -28,8 +32,14 @@ def create_io_arrays(dataset, linear):
 
 
 def find_ols(inputs, outputs):
+    """
+    Will find ordinary least squares which is used as weights. Following function is used:
+    (X^T X)^-1 X^T y
+    :param inputs: inputs array
+    :param outputs: outputs array
+    :return: array
+    """
     transposed_input = np.transpose(inputs)
-
     dot = np.dot(transposed_input, inputs)
     a = np.linalg.pinv(dot, -1)
     b = np.dot(transposed_input, outputs)
@@ -37,6 +47,14 @@ def find_ols(inputs, outputs):
 
 
 def calcError(inputs, outputs, weights):
+    """
+    Using the following formula to calculate the error:
+    (Xw - y)^T (Xw - y)
+    :param inputs: inputs array
+    :param outputs: outputs array
+    :param weights: weights array
+    :return: float
+    """
     a = np.subtract(np.dot(inputs, weights), outputs)
     return np.dot(np.transpose(a), a)
 
@@ -51,6 +69,13 @@ def split_twodim_arr(arr):
 
 
 def create_linreg_line(data, weights):
+    """
+    Using the calculated weights with respect to the data sets, this will create a line which can be plotted.
+    It will represent a suggestion for linear regression.
+    :param data: dataset array
+    :param weights: weights array
+    :return: array
+    """
     line = []
     for set in data:
         line.append([set[0], set[0]*weights[1] + weights[0]])
@@ -86,13 +111,12 @@ def apply_legend(fig):
     test_1 = mpatches.Patch(color="blue")
     train_0 = mpatches.Patch(color="orange")
     train_1 = mpatches.Patch(color="black")
-    fig.legend(handles=[test_0, test_1, train_0, train_1], labels=["test data output 0", "test data output 1",
-                                                                   "train data output 0", "train data output 1"])
+    fig.legend([test_0, test_1, train_0, train_1], ["test data output 0", "test data output 1", "train data output 0", "train data output 1"])
 
 
 def scatter_plot(ax, dataset, isTest):
     """
-
+    Using a subplot, the data from dataset will be plotted. isTest indicates if the data is training or test data.
     :param ax: subplot
     :param dataset: set of inputs and outputs
     :param isTest: indicates if the scatter data is test data or training data
@@ -106,15 +130,24 @@ def scatter_plot(ax, dataset, isTest):
 
 
 def plot3d(x, t, w, linear):
+    """
+    Will create meshgrids for x and y axis as well as a grid for the z-axis for linear and non-linear problems.
+    :param x: dataset
+    :param t: dataset
+    :param w: weights
+    :param linear: boolean indicating if the plot should only account for linear or non-linear data.
+    :return:
+    """
     fig = plt.figure()
-    # Creating two planes which will be manipulated to represent decision boundary
+    apply_legend(fig)
+    # Creating two matrices which will be manipulated to represent decision boundary
     xx, yy = np.meshgrid(np.arange(0, 1, 0.05), np.arange(0, 1, 0.04))
     ax = fig.add_subplot(111, projection='3d')
-    # Builds up
+    # Builds up the z modifiers of the decision boundary
     zz = w[0] + w[1]*xx + w[2]*yy + (w[3]*xx*xx + w[4]*yy*yy if not linear else 0)
+    # Plots a figure using the values created above.
     ax.plot_wireframe(xx, yy, zz, color="y")
     ax.set_zlim(-1, 2)
-    apply_legend(fig)
     scatter_plot(ax, x, True)
     scatter_plot(ax, t, False)
     mpl.pyplot.show()
@@ -129,6 +162,14 @@ def sigmoid(h):
 
 
 def cross_entropy(weights, inputs, outputs):
+    """
+    Using an iteration of weights, this will iterate over all the inputs and calculate the difference of predicted
+    versus actual output.
+    :param weights: weights array
+    :param inputs: inputs array
+    :param outputs: outputs array
+    :return: float
+    """
     error = 0
     for i, set in enumerate(inputs):
         y = outputs[i]
@@ -138,6 +179,16 @@ def cross_entropy(weights, inputs, outputs):
 
 
 def train_function(weights, inputs, outputs, leaning_rate):
+    """
+    Training function implemented from the exercise paper.
+    Iterates over all the inputs, adding up differences in predicted vs actual data with respect to the individual sets
+    of data.
+    :param weights: weights array
+    :param inputs: inputs array
+    :param outputs: outputs array
+    :param leaning_rate: rate of which the algorithm should modify the weights.
+    :return: float
+    """
     experience = [0] * len(inputs[0])
     for i, set in enumerate(inputs):
         h = h_function(weights, set)

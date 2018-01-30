@@ -6,11 +6,12 @@ test_files = ["test_1d_reg_data.csv", "test_2d_reg_data.csv", "cl_test_1.csv", "
 
 
 def task_1_2():
+    print("Start task 1.2")
     train_dataset = dl.load_from_csv(train_files[1], 1)
     test_dataset = dl.load_from_csv(test_files[1], 1)
 
-    train_io_array = functions.create_io_arrays(train_dataset)
-    test_io_array = functions.create_io_arrays(test_dataset)
+    train_io_array = functions.create_io_arrays(train_dataset, True)
+    test_io_array = functions.create_io_arrays(test_dataset, True)
 
     train_weights = functions.find_ols(train_io_array[0], train_io_array[1])
 
@@ -18,15 +19,18 @@ def task_1_2():
     print("Error: " + functions.calcError(train_io_array[0], train_io_array[1], train_weights).__str__())
     print("\n\nTest data:\nWeights: " + train_weights.__str__())
     print("Error: " + functions.calcError(test_io_array[0], test_io_array[1], train_weights).__str__())
+    print("End task 1.2")
 
 
 def task_2_1_2():
+    print("\n\nStart task 2.1.2")
     train_dataset = dl.load_from_csv(train_files[0], 1)
-    train_io_array = functions.create_io_arrays(train_dataset)
+    train_io_array = functions.create_io_arrays(train_dataset, True)
     weights = functions.find_ols(train_io_array[0], train_io_array[1])
     test_dataset = dl.load_from_csv(test_files[0], 1)
     line = functions.create_linreg_line(test_dataset, weights)
     functions.plot(train_dataset, test_dataset, line)
+    print("End task 2.1.2")
 
 
 def load_data(linear, dataset):
@@ -38,6 +42,7 @@ def load_data(linear, dataset):
     train_error = []
     test_error = []
 
+    # Does 1000 epochs of training.
     for i in range(0, 1000):
         weights = functions.train_function(weights, train_dataset[0], train_dataset[1], 0.1)
         train_error.append(functions.cross_entropy(weights, train_dataset[0], train_dataset[1]))
@@ -46,6 +51,7 @@ def load_data(linear, dataset):
 
 
 def task_2_2_1():
+    print("\n\nStart task 2.2.1")
     linear = True
     data = load_data(linear, 2)
     train_dataset = data[0]
@@ -55,9 +61,11 @@ def task_2_2_1():
     test_error = data[4]
     functions.plot_error(train_error, test_error)
     functions.plot3d(train_dataset, test_dataset, weights, linear)
+    print("End task 2.2.1")
 
 
 def task_2_2_2(linear):
+    print("\n\nStart task 2.2.2")
     data = load_data(linear, 3)
     train_dataset = data[0]
     test_dataset = data[1]
@@ -66,10 +74,11 @@ def task_2_2_2(linear):
     test_error = data[4]
     functions.plot_error(train_error, test_error)
     functions.plot3d(train_dataset, test_dataset, weights, linear)
+    print("End task 2.2.2")
 
 
-#task_1_2()
-#task_2_1_2()
-#task_2_2_1()
+task_1_2()
+task_2_1_2()
+task_2_2_1()
 task_2_2_2(True)
 task_2_2_2(False)
