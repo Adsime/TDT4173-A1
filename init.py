@@ -6,7 +6,7 @@ test_files = ["test_1d_reg_data.csv", "test_2d_reg_data.csv", "cl_test_1.csv", "
 
 
 def task_1_2():
-    print("Start task 1.2")
+    print("Start task 1.2\n")
     train_dataset = dl.load_from_csv(train_files[1], 1)
     test_dataset = dl.load_from_csv(test_files[1], 1)
 
@@ -19,7 +19,7 @@ def task_1_2():
     print("Error: " + functions.calcError(train_io_array[0], train_io_array[1], train_weights).__str__())
     print("\n\nTest data:\nWeights: " + train_weights.__str__())
     print("Error: " + functions.calcError(test_io_array[0], test_io_array[1], train_weights).__str__())
-    print("End task 1.2")
+    print("\nEnd task 1.2")
 
 
 def task_2_1_2():

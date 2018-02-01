@@ -132,11 +132,10 @@ def scatter_plot(ax, dataset, isTest):
 def plot3d(x, t, w, linear):
     """
     Will create meshgrids for x and y axis as well as a grid for the z-axis for linear and non-linear problems.
-    :param x: dataset
-    :param t: dataset
-    :param w: weights
+    :param x: dataset matrix
+    :param t: dataset matrix
+    :param w: weights array
     :param linear: boolean indicating if the plot should only account for linear or non-linear data.
-    :return:
     """
     fig = plt.figure()
     apply_legend(fig)
@@ -154,10 +153,23 @@ def plot3d(x, t, w, linear):
 
 
 def h_function(weights, inputs):
+    """
+    Implementation of the following function:
+    h(x) = w^T x
+    :param weights: weights array
+    :param inputs: inputs matrix
+    :return:
+    """
     return np.dot(np.transpose(weights), inputs)
 
 
 def sigmoid(h):
+    """
+    Implementation of the following function:
+    σ(z) = 1/(1+e^-z)
+    :param h: value returned from h_function
+    :return: float
+    """
     return 1 / (1 + np.exp(-h))
 
 
@@ -165,8 +177,10 @@ def cross_entropy(weights, inputs, outputs):
     """
     Using an iteration of weights, this will iterate over all the inputs and calculate the difference of predicted
     versus actual output.
+    Implementation of the following function:
+    (-1/2) * sum from i = 0 to n, yi*lnσ(z) + (1-yi) * ln(1-σ(z))
     :param weights: weights array
-    :param inputs: inputs array
+    :param inputs: inputs matrix
     :param outputs: outputs array
     :return: float
     """
@@ -184,7 +198,7 @@ def train_function(weights, inputs, outputs, leaning_rate):
     Iterates over all the inputs, adding up differences in predicted vs actual data with respect to the individual sets
     of data.
     :param weights: weights array
-    :param inputs: inputs array
+    :param inputs: inputs matrix
     :param outputs: outputs array
     :param leaning_rate: rate of which the algorithm should modify the weights.
     :return: float
