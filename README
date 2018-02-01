@@ -1,0 +1,9 @@
+This program is runnable using the Anaconda distribution of Python.
+
+Run init.py to start the program.
+
+At the bottom of init.py are a list of methods which takes care of each task in the assignment.
+
+By default, they will be run in sequence, but can be commented out to speed up the process of getting to one task.
+
+The command line window will indicate what part of the assignment is being shown, as well as when it ends.
